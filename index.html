@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .stopwatch {
+      margin: 50px auto;
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      width: 300px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #time {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="stopwatch">
+    <h1>Stopwatch</h1>
+    <div id="time">00:00:00</div>
+    <button id="start" onclick="startStopwatch()">Start</button>
+    <button id="stop" onclick="stopStopwatch()" disabled>Stop</button>
+    <button id="reset" onclick="resetStopwatch()" disabled>Reset</button>
+  </div>
+
+  <script>
+    let timer = null;
+    let startTime = 0;
+    let elapsedTime = 0;
+
+    function formatTime(timeInMilliseconds) {
+      const totalSeconds = Math.floor(timeInMilliseconds / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    function startStopwatch() {
+      document.getElementById('start').disabled = true;
+      document.getElementById('stop').disabled = false;
+      document.getElementById('reset').disabled = false;
+
+      startTime = Date.now() - elapsedTime;
+
+      timer = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        document.getElementById('time').textContent = formatTime(elapsedTime);
+      }, 1000);
+    }
+
+    function stopStopwatch() {
+      document.getElementById('start').disabled = false;
+      document.getElementById('stop').disabled = true;
+
+      clearInterval(timer);
+    }
+
+    function resetStopwatch() {
+      document.getElementById('start').disabled = false;
+      document.getElementById('stop').disabled = true;
+      document.getElementById('reset').disabled = true;
+
+      clearInterval(timer);
+      elapsedTime = 0;
+      document.getElementById('time').textContent = "00:00:00";
+    }
+  </script>
+</body>
+</html>
